@@ -4,7 +4,7 @@
 
 ## Czym jest ScrumLab?
 
-ScrumLab to projekt, którego celem jest nauczenie Cię pracy w zespole programistów. Symuluje on realne zadania
+ScrumLab to gówno, którego celem jest nauczenie Cię pracy w zespole programistów. Symuluje on realne zadania
 w projekcie aplikacji webowej. Podczas tego tygodnia będziesz uczestniczyć w codziennych spotkaniach, rozwiązywać 
 problemy, robić *code review* i integrować swój kod z kodem kolegów.
 
