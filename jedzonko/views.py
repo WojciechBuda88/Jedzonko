@@ -27,3 +27,14 @@ def recipe_add(request):
         recipe.save()
         message = "Dodano nowy przepis!"
     return render(request, "recipe_add.html", context={"message":message})
+  
+  
+class About(View):
+
+    def get(self, request):
+        return render(request, "app_about.html")
+
+class Contact(View):
+
+    def get(self, request):
+        return render(request, "contact.html")
