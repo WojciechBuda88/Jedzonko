@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from jedzonko.views import IndexView, AboutView, ContactView, RecipeListView, recipe_add
+from jedzonko.views import IndexView, AboutView, ContactView, RecipeListView, recipe_add, MainView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', IndexView.as_view()),
     path('recipe/list', RecipeListView.as_view())
+    path('', MainView.as_view())
     path('recipe/add/', recipe_add, name="recipe_add"),
     path('about/', AboutView.as_view()),
     path('contact/', ContactView.as_view()),
