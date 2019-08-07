@@ -30,17 +30,16 @@ class MainView(View):
 
 def recipe_add(request):
     if request.method == "GET":
-        return render(request, "recipe_add.html")
+        return render(request, "app-add-recipe.html")
     else:
         name = request.POST.get("name")
         ingredients = request.POST.get("ingredients")
         description = request.POST.get("description")
         preparation_time = request.POST.get("preparation_time")
         instructions = request.POST.get("instructions")
-        recipe = Recipe.objects.create(name=name, ingredients=ingredients,
+        Recipe.objects.create(name=name, ingredients=ingredients,
                                        preparation_time=preparation_time, instructions=instructions, description=description)
-        message = "Dodano nowy przepis!"
-    return render(request, "recipe_add.html", context={"message":message})
+    return render(request, "app-add-recipe.html")
   
   
 class AboutView(View):
