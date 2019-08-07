@@ -50,24 +50,39 @@
             <div class="carousel-item active">
                 <div class="container w-75 d-flex">
                     <div class="carousel-caption d-block">
+                        {% if recipes.0 %}
                         <h1>{{recipes.0}}</h1>
                         <h3> {{recipes.0.description}}</h3>
+                        {% else %}
+                        <h1>Miejsce na przepis 1</h1>
+                        <!--                        <h3></h3>-->
+                        {% endif %}
                     </div>
                 </div>
             </div>
             <div class="carousel-item">
                 <div class="container w-75 d-flex">
                     <div class="carousel-caption d-block">
+                        {% if recipes.1 %}
                         <h1>{{recipes.1}}</h1>
                         <h3> {{recipes.1.description}}</h3>
+                        {% else %}
+                        <h1>Miejsce na przepis 2</h1>
+                        <!--                        <h3></h3>-->
+                        {% endif %}
                     </div>
                 </div>
             </div>
             <div class="carousel-item">
                 <div class="container w-75 d-flex">
                     <div class="carousel-caption d-block">
+                        {% if recipes.2 %}
                         <h1>{{recipes.2}}</h1>
                         <h3> {{recipes.2.description}}</h3>
+                        {% else %}
+                        <h1>Miejsce na przepis 3</h1>
+                        <!--                        <h3></h3>-->
+                        {% endif %}
                     </div>
                 </div>
             </div>

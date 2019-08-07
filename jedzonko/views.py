@@ -15,8 +15,9 @@ class IndexView(View):
 
 class MainView(View):
     def get(self, request):
-        recipes = Recipe.objects.all()
+        recipes = list(Recipe.objects.all())
+        random.shuffle(recipes)
         context = {
-            'recipes': random.choices(recipes, k=3)
+            'recipes': recipes
         }
         return render(request, 'index.html', context=context)
