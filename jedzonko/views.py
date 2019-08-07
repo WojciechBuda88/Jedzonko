@@ -17,7 +17,7 @@ class RecipeListView(View):
         recipes = Recipe.objects.all()
         return render(request, "recipes.html", context={"recipes": recipes})
 
-      
+
 class MainView(View):
     def get(self, request):
         recipes = list(Recipe.objects.all())
@@ -26,28 +26,28 @@ class MainView(View):
             'recipes': recipes
         }
         return render(request, 'index.html', context=context)
-      
 
-def recipe_add(request):
-    if request.method == "GET":
+
+class RecipeAddView(View):
+    def get(self, request):
         return render(request, "app-add-recipe.html")
-    else:
+
+    def post(self, request):
         name = request.POST.get("name")
         ingredients = request.POST.get("ingredients")
         description = request.POST.get("description")
         preparation_time = request.POST.get("preparation_time")
         instructions = request.POST.get("instructions")
         Recipe.objects.create(name=name, ingredients=ingredients,
-                                       preparation_time=preparation_time, instructions=instructions, description=description)
-    return render(request, "app-add-recipe.html")
-  
-  
+                              preparation_time=preparation_time, instructions=instructions, description=description)
+        return render(request, "app-add-recipe.html")
+
+
 class AboutView(View):
     def get(self, request):
-        return render(request, "app_about.html")
-      
+        return render(request, "about.html")
+
 
 class ContactView(View):
     def get(self, request):
         return render(request, "contact.html")
-
