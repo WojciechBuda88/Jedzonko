@@ -7,12 +7,17 @@ from jedzonko.models import Recipe
 
 
 class IndexView(View):
-
     def get(self, request):
         ctx = {"actual_date": datetime.now()}
         return render(request, "test.html", ctx)
 
 
+class RecipeListView(View):
+    def get(self, request):
+        recipes = Recipe.objects.all()
+        return render(request, "recipes.html", context={"recipes": recipes})
+
+      
 class MainView(View):
     def get(self, request):
         recipes = list(Recipe.objects.all())
@@ -41,8 +46,8 @@ def recipe_add(request):
 class AboutView(View):
     def get(self, request):
         return render(request, "app_about.html")
-
       
+
 class ContactView(View):
     def get(self, request):
         return render(request, "contact.html")
