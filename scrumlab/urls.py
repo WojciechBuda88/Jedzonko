@@ -16,10 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from jedzonko.views import IndexView, MainView
+from jedzonko.views import IndexView, MainView, AboutView, ContactView, recipe_add
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', IndexView.as_view()),
     path('', MainView.as_view())
+    path('recipe/add/', recipe_add, name="recipe_add"),
+    path('about/', AboutView.as_view()),
+    path('contact/', ContactView.as_view()),
 ]

@@ -21,3 +21,29 @@ class MainView(View):
             'recipes': recipes
         }
         return render(request, 'index.html', context=context)
+      
+
+def recipe_add(request):
+    if request.method == "GET":
+        return render(request, "recipe_add.html")
+    else:
+        name = request.POST.get("name")
+        ingredients = request.POST.get("ingredients")
+        description = request.POST.get("description")
+        preparation_time = request.POST.get("preparation_time")
+        instructions = request.POST.get("instructions")
+        recipe = Recipe.objects.create(name=name, ingredients=ingredients,
+                                       preparation_time=preparation_time, instructions=instructions, description=description)
+        message = "Dodano nowy przepis!"
+    return render(request, "recipe_add.html", context={"message":message})
+  
+  
+class AboutView(View):
+    def get(self, request):
+        return render(request, "app_about.html")
+
+      
+class ContactView(View):
+    def get(self, request):
+        return render(request, "contact.html")
+
