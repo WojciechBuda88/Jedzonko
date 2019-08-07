@@ -24,4 +24,4 @@ def recipe_add(request):
         instructions = request.POST.get("instructions")
         Recipe.objects.create(name=name, ingredients=ingredients,
                                        preparation_time=preparation_time, instructions=instructions, description=description)
-    return render(request, "app-add-recipe.html")
+    return render(request, "app-add-recipe.html" )
