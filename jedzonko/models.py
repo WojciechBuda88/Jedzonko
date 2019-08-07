@@ -7,9 +7,10 @@ class Recipe(models.Model):
     ingredients = models.TextField()
     description = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now=True)
     preparation_time = models.IntegerField()
     votes = models.IntegerField(null=True)
+    instructions = models.TextField(null=True)
 
     def __str__(self):
         return self.name
