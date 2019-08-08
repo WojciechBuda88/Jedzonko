@@ -3,7 +3,7 @@ import random
 
 from django.shortcuts import render
 from django.views import View
-from jedzonko.models import Recipe
+from jedzonko.models import Recipe,Plan
 
 
 class IndexView(View):
@@ -51,3 +51,12 @@ class AboutView(View):
 class ContactView(View):
     def get(self, request):
         return render(request, "contact.html")
+
+class LoginView(View):
+    def get(self, request):
+        plan_gty = Plan.objects.count()
+        recipe_qty = Recipe.objects.count()
+        context = {"plan_qty": plan_gty,
+                   "recipe_qty": recipe_qty
+                   }
+        return render(request, 'dashboard.html', context=context)

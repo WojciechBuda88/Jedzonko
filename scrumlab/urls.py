@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from jedzonko.views import IndexView, AboutView, ContactView, RecipeListView, RecipeAddView, MainView
+from jedzonko.views import IndexView, AboutView, ContactView, RecipeListView, RecipeAddView, MainView, LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +25,5 @@ urlpatterns = [
     path('recipe/list/', RecipeListView.as_view()),
     path('about/', AboutView.as_view()),
     path('contact/', ContactView.as_view()),
+    path('dashboard/', LoginView.as_view(), name="login_view"),
 ]
