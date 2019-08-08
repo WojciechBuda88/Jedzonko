@@ -3,7 +3,7 @@ import random
 
 from django.shortcuts import render
 from django.views import View
-from jedzonko.models import Recipe, Plan
+from jedzonko.models import Recipe, Plan, DayName
 
 
 class IndexView(View):
@@ -85,8 +85,28 @@ class PlanDetailsView(View):
     def get(self, request, plan_id):
         plan = Plan.objects.get(pk=plan_id)
         recipe_plans = plan.recipe_plans.filter(plan_id=plan_id).order_by('day_name_id', 'order')
-        context = {
-            'plan': plan,
-            'recipe_plans': recipe_plans
-        }
+        days = {}
+        for recipe_plan in recipe_plans:
+            day_name = recipe_plan.day_name_id.day_name
+            if day_name not in days:
+                days[day_name] = [recipe_plan]
+            else:
+                days[day_name].append(recipe_plan)
+
+            context = {
+                'plan': plan,
+                'recipe_plans': recipe_plans,
+                'days': days,
+            }
         return render(request, 'app-details-schedules.html', context=context)
+
+
+class RecipeDetailsView(View):
+    def get(self, request, recipe_id):
+        recipe = Recipe.objects.get(pk=recipe_id)
+        recipe_ingredients = recipe.ingredients.split(',')
+        context = {
+            'recipe': recipe,
+            'ingredients': recipe_ingredients
+        }
+        return render(request, 'app-recipe-details.html', context=context)

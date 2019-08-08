@@ -33,16 +33,18 @@
                 </div>
             </div>
         </div>
-        {% for recipe_plan in recipe_plans %}
+
+        {% for day, value in days.items %}
         <table class="table">
             <thead>
             <tr class="d-flex">
-                <th class="col-2">{{recipe_plan.day_name_id.day_name}}</th>
+                <th class="col-2">{{day}}</th>
                 <th class="col-7"></th>
                 <th class="col-1"></th>
                 <th class="col-2"></th>
             </tr>
             </thead>
+            {% for recipe_plan in value %}
             <tbody class="text-color-lighter">
             <tr class="d-flex">
                 <td class="col-2">{{recipe_plan.meal_name}}</td>
@@ -56,8 +58,10 @@
                 </td>
             </tr>
             </tbody>
+            {% endfor %}
         </table>
         {% endfor %}
+
 
     </div>
 </div>
