@@ -1,8 +1,10 @@
 {% extends "__base__.html" %}
-
 {% block title %}Nowy przepis{% endblock %}
-
 {% block content %}
+
+{% if message %}
+{{ message }}
+{% endif %}
 
 <form action="" method="POST">
     <div class="dashboard-content border-dashed p-3 m-4 view-height">
