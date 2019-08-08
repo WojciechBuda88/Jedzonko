@@ -50,4 +50,4 @@ class RecipePlan(models.Model):
     recipe_id = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='recipe_plans')
 
     def __str__(self):
-        return f'{self.meal_name}  {self.plan_id}'
+        return f'{self.plan_id} {self.day_name_id} {self.meal_name}'
