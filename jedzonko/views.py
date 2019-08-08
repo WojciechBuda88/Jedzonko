@@ -66,10 +66,24 @@ class AppView(View):
     def get(self, request):
         plan_gty = Plan.objects.count()
         recipe_qty = Recipe.objects.count()
+        plan_latest = Plan.objects.order_by('-created')[0]
+        recipe_plans = plan_latest.recipe_plans.filter(plan_id=plan_latest.id).order_by('day_name_id', 'order')
+        days = {}
+        for recipe_plan in recipe_plans:
+            day_name = recipe_plan.day_name_id.day_name
+            if day_name not in days:
+                days[day_name] = [recipe_plan]
+            else:
+                days[day_name].append(recipe_plan)
+
         context = {"plan_qty": plan_gty,
-                   "recipe_qty": recipe_qty
+                   "recipe_qty": recipe_qty,
+                   'plan': plan_latest,
+                   'recipe_plans': recipe_plans,
+                   'days': days,
                    }
         return render(request, 'dashboard.html', context=context)
+
 
 
 class PlanAddView(View):
