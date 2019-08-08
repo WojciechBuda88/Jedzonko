@@ -121,3 +121,15 @@ class RecipeDetailsView(View):
             'ingredients': recipe_ingredients
         }
         return render(request, 'app-recipe-details.html', context=context)
+
+
+class RecipesView(View):
+    def get(self, request):
+        return render(request, 'recipes.html')
+
+
+class RecipeNewView(View):
+    def get(self, request):
+        recipe_new = Recipe.objects.order_by('-created')[0]
+        recipe_new_ingredients = recipe_new.ingredients.split(",")
+        return render(request, 'app-recipe-details.html', context={"recipe_new": recipe_new, "recipe_new_ingredients": recipe_new_ingredients})
