@@ -64,7 +64,12 @@ class ContactView(View):
 
 class AppView(View):
     def get(self, request):
-        return render(request, 'dashboard.html')
+        plan_gty = Plan.objects.count()
+        recipe_qty = Recipe.objects.count()
+        context = {"plan_qty": plan_gty,
+                   "recipe_qty": recipe_qty
+                   }
+        return render(request, 'dashboard.html', context=context)
 
 
 class PlanAddView(View):
