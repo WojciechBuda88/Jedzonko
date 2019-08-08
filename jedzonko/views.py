@@ -38,9 +38,15 @@ class RecipeAddView(View):
         description = request.POST.get("description")
         preparation_time = request.POST.get("preparation_time")
         instructions = request.POST.get("instructions")
-        Recipe.objects.create(name=name, ingredients=ingredients,
-                              preparation_time=preparation_time, instructions=instructions, description=description)
-        return render(request, "app-add-recipe.html")
+
+        if name and ingredients and description and preparation_time and instructions:
+            Recipe.objects.create(name=name, ingredients=ingredients,
+                                  preparation_time=preparation_time, instructions=instructions, description=description)
+            return render(request, "app-add-recipe.html")
+        else:
+            message = "Wypełnij poprawnie wszystkie pola"
+            return render(request, "app-add-recipe.html", context={"message":message})
+
 
 
 class AboutView(View):
