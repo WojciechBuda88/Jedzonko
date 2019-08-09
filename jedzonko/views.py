@@ -1,7 +1,7 @@
 from datetime import datetime
 import random
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.http import Http404
 from jedzonko.models import Recipe, Plan, DayName, RecipePlan
@@ -116,10 +116,10 @@ class PlanDetailsView(View):
 class RecipeDetailsView(View):
     def get(self, request, recipe_id):
         recipe = Recipe.objects.get(pk=recipe_id)
-        recipe_ingredients = recipe.ingredients.split(',')
+        ingredients = recipe.ingredients.split(',')
         context = {
             'recipe': recipe,
-            'ingredients': recipe_ingredients
+            'ingredients': ingredients
         }
         return render(request, 'app-recipe-details.html', context=context)
 
@@ -173,7 +173,44 @@ class RecipesView(View):
 
 class RecipeNewView(View):
     def get(self, request):
-        recipe_new = Recipe.objects.order_by('-created')[0]
-        recipe_new_ingredients = recipe_new.ingredients.split(",")
-        return render(request, 'app-recipe-details.html', context={"recipe_new": recipe_new, "recipe_new_ingredients": recipe_new_ingredients})
+        recipe = Recipe.objects.order_by('-created')[0]
+        ingredients = recipe.ingredients.split(",")
+        return render(request, 'app-recipe-details.html', context={"recipe": recipe, "ingredients": ingredients})
 
+
+class RecipeModifyView(View):
+    def get(self, request, recipe_id):
+        recipe = get_object_or_404(Recipe, pk=recipe_id)
+        name = recipe.name
+        ingredients = recipe.ingredients
+        description = recipe.description
+        preparation_time = recipe.preparation_time
+        instructions = recipe.instructions
+        return render(request, "app-add-recipe.html", context={'name': name, 'ingredients': ingredients,
+                                  'preparation_time': preparation_time, 'instructions': instructions, 'description': description})
+
+    def post(self, request, recipe_id):
+        recipe = Recipe.objects.get(pk=recipe_id)
+        recipe.name = request.POST.get("name")
+        recipe.ingredients = request.POST.get("ingredients")
+        recipe.preparation_time = request.POST.get("preparation_time")
+        recipe.instructions = request.POST.get("instructions")
+        recipe.description = request.POST.get("description")
+        if recipe.name and recipe.ingredients and recipe.description and recipe.preparation_time and recipe.instructions:
+            recipe.save()
+            message = "Przepis zaktualizowany"
+            return render(request, "app-add-recipe.html", context={"message": message})
+        else:
+            recipe.name = recipe.name
+            recipe.ingredients = recipe.ingredients
+            recipe.description = recipe.description
+            recipe.preparation_time = recipe.preparation_time
+            recipe.instructions = recipe.instructions
+            message = "Wypełnij poprawnie wszystkie pola"
+            return render(request, "app-add-recipe.html", context={'name': recipe.name, 'ingredients': recipe.ingredients,
+                                                                   'preparation_time': recipe.preparation_time,
+                                                                   'instructions': recipe.instructions,
+                                                                   'description': recipe.description,
+                                                                   'message': message})
+
+            return render(request, "app-add-recipe.html", context)
