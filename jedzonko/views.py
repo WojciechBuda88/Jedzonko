@@ -64,7 +64,12 @@ class ContactView(View):
 
 class AppView(View):
     def get(self, request):
-        return render(request, 'dashboard.html')
+        plan_gty = Plan.objects.count()
+        recipe_qty = Recipe.objects.count()
+        context = {"plan_qty": plan_gty,
+                   "recipe_qty": recipe_qty
+                   }
+        return render(request, 'dashboard.html', context=context)
 
 
 class PlanAddView(View):
@@ -119,6 +124,7 @@ class RecipeDetailsView(View):
         return render(request, 'app-recipe-details.html', context=context)
 
 
+
 class PlanEditView(View):
     def get(self, request):
         if not request.session.get('plan_id'):
@@ -159,3 +165,15 @@ class PlanEditView(View):
             'recipes': recipes,
         }
         return render(request, 'app-schedules-meal-recipe.html', context=context)
+
+class RecipesView(View):
+    def get(self, request):
+        return render(request, 'recipes.html')
+
+
+class RecipeNewView(View):
+    def get(self, request):
+        recipe_new = Recipe.objects.order_by('-created')[0]
+        recipe_new_ingredients = recipe_new.ingredients.split(",")
+        return render(request, 'app-recipe-details.html', context={"recipe_new": recipe_new, "recipe_new_ingredients": recipe_new_ingredients})
+
