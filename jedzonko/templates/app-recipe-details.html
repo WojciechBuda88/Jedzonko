@@ -4,23 +4,22 @@
             <tr class="d-flex">
                 <th scope="row" class="col-2">Nazwa Przepisu</th>
                 <td class="col-7">
-                    {{recipe.name}}
+                    {{recipe_new.name}}
                 </td>
             </tr>
             <tr class="d-flex">
                 <th scope="row" class="col-2">Opis przepisu</th>
-                <td class="col-7">{{recipe.description}}
+                <td class="col-7">{{recipe_new.description}}
                 </td>
             </tr>
             <tr class="d-flex">
                 <th scope="row" class="col-2">Przygotowanie(minuty)</th>
                 <td class="col-7">
-                    {{recipe.preparation_time}}
+                    {{recipe_new.preparation_time}}
                 </td>
             </tr>
             </tbody>
         </table>
-
         <div class="row d-flex">
             <div class="col-5 border-bottom border-3"><h3
                     class="text-uppercase">Sposób przygotowania</h3></div>
@@ -30,23 +29,14 @@
         </div>
         <div class="row d-flex">
             <div class="col-5 p-4">
-                <p>{{recipe.instructions}}</p>
+                <p>{{recipe_new.instructions}}</p>
             </div>
             <div class="col-2"></div>
-            <ul class="col-5 p-4 list-unstyled">
-                {% for ingredient in ingredients%}
-                <li>{{ingredient}}</li>
+            <div class="col-5 p-4">
+                {% for ingredient in recipe_new_ingredients %}
+                    <ul>{{ ingredient }}</ul>
                 {% endfor %}
-                <!--                <li>brukselka 300g</li>-->
-                <!--                <li>ziemniaki 500g</li>-->
-                <!--                <li>Fix Naturalnie makaronowa z szynką Knorr 1 szt.</li>-->
-                <!--                <li>średnia cebula 1szt.</li>-->
-                <!--                <li>ząbek czosnku 1szt.</li>-->
-                <!--                <li>kiełbasa np. śląska 500g</li>-->
-                <!--                <li>śmietana 18% 200 ml</li>-->
-                <!--                <li>Rama Smaż jak szef kuchni, wariant klasyczny 4 łyżki</li>-->
-                <!--                <li>gałązka tymianku 1 szt.</li>-->
-            </ul>
+            </div>
         </div>
 
     </div>
