@@ -1,21 +1,33 @@
-
+{% extends "__base__.html" %}
+{% block title %}{% endblock %}
+{% block content %}
+<div class="dashboard-content border-dashed p-3 m-4 view-height">
+    <div class="mt-4 ml-4 mr-4">
+        <div class="row border-bottom border-3">
+            <div class="col"><h3 class="color-header text-uppercase">Szczegóły
+                przepisu</h3></div>
+            <div class="col d-flex justify-content-end mb-2"><a
+                    href="/recipe/list/"
+                    class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4">Powrót</a>
+            </div>
+        </div>
         <table class="table borderless">
             <tbody>
             <tr class="d-flex">
                 <th scope="row" class="col-2">Nazwa Przepisu</th>
                 <td class="col-7">
-                    {{recipe_new.name}}
+                    {{recipe.name}}
                 </td>
             </tr>
             <tr class="d-flex">
                 <th scope="row" class="col-2">Opis przepisu</th>
-                <td class="col-7">{{recipe_new.description}}
+                <td class="col-7">{{recipe.description}}
                 </td>
             </tr>
             <tr class="d-flex">
                 <th scope="row" class="col-2">Przygotowanie(minuty)</th>
                 <td class="col-7">
-                    {{recipe_new.preparation_time}}
+                    {{recipe.preparation_time}}
                 </td>
             </tr>
             </tbody>
@@ -29,16 +41,17 @@
         </div>
         <div class="row d-flex">
             <div class="col-5 p-4">
-                <p>{{recipe_new.instructions}}</p>
+                <p>{{recipe.instructions}}</p>
             </div>
             <div class="col-2"></div>
             <div class="col-5 p-4">
-                {% for ingredient in recipe_new_ingredients %}
-                    <ul>{{ ingredient }}</ul>
-                {% endfor %}
+                <ul>
+                    {% for ingredient in ingredients %}
+                    <li>{{ ingredient }}</li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
-
     </div>
 </div>
 {% endblock content %}

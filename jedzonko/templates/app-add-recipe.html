@@ -27,18 +27,17 @@
                 <tr class="d-flex">
                     <th scope="row" class="col-2">Nazwa Przepisu</th>
                     <td class="col-7">
-                        <input class="w-100 p-1" value="" name="name">
+                        <input class="w-100 p-1" value="{{ name }}" name="name">
                     </td>
                 </tr>
                 <tr class="d-flex">
                     <th scope="row" class="col-2">Opis przepisu</th>
-                    <td class="col-7"><textarea class="w-100 p-1"
-                                                rows="5" name="description"></textarea></td>
+                    <td class="col-7"><textarea class="w-100 p-1" rows="5" name="description">{{ description }}</textarea></td>
                 </tr>
                 <tr class="d-flex">
                     <th scope="row" class="col-2">Przygotowani(minuty)</th>
                     <td class="col-3">
-                        <input class="p-1" type="number" value="" name="preparation_time">
+                        <input class="p-1" type="number" value="{{ preparation_time }}" name="preparation_time">
                     </td>
                 </tr>
                 </tbody>
@@ -53,12 +52,12 @@
             </div>
             <div class="row d-flex">
                 <div class="col-5 p-4">
-                    <textarea class="w-100 p-1" rows="10" name="instructions"></textarea>
+                    <textarea class="w-100 p-1" rows="10" name="instructions">{{ instructions }}</textarea>
                 </div>
                 <div class="col-2"></div>
 
                 <div class="col-5 p-4">
-                    <textarea class="w-100 p-1" rows="10" name="ingredients"></textarea>
+                    <textarea class="w-100 p-1" rows="10" name="ingredients">{{ ingredients }}</textarea>
                 </div>
             </div>
         </div>
