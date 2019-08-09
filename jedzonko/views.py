@@ -1,9 +1,10 @@
 from datetime import datetime
 import random
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
-from jedzonko.models import Recipe, Plan, DayName
+from django.http import Http404
+from jedzonko.models import Recipe, Plan, DayName, RecipePlan
 
 
 class IndexView(View):
@@ -48,8 +49,7 @@ class RecipeAddView(View):
             return render(request, "app-add-recipe.html")
         else:
             message = "Wypełnij poprawnie wszystkie pola"
-            return render(request, "app-add-recipe.html", context={"message":message})
-
+            return render(request, "app-add-recipe.html", context={"message": message})
 
 
 class AboutView(View):
@@ -79,8 +79,9 @@ class PlanAddView(View):
     def post(self, request):
         name = request.POST.get('name')
         description = request.POST.get('description')
-        Plan.objects.create(name=name, description=description)
-        return render(request, 'app-add-schedules.html')
+        new_plan = Plan.objects.create(name=name, description=description)
+        request.session['plan_id'] = new_plan.id
+        return redirect('/plan/add/details')
 
 
 class PlanListView(View):
@@ -123,6 +124,48 @@ class RecipeDetailsView(View):
         return render(request, 'app-recipe-details.html', context=context)
 
 
+
+class PlanEditView(View):
+    def get(self, request):
+        if not request.session.get('plan_id'):
+            raise Http404
+            # return render(request, 'app-schedules-meal-recipe.html')
+        plan_id = request.session.get('plan_id')
+        days = DayName.objects.all()
+        plan = Plan.objects.get(pk=plan_id)
+        recipes = Recipe.objects.all()
+        context = {
+            'plan': plan.name,
+            'days': days,
+            'recipes': recipes,
+        }
+        return render(request, 'app-schedules-meal-recipe.html', context=context)
+
+    def post(self, request):
+        plan_id = request.session.get('plan_id')
+        plan = Plan.objects.get(pk=plan_id)
+
+        meal_name = request.POST.get('meal_name')
+        order = request.POST.get('order')
+
+        day_name_id = request.POST.get('day_name_id')
+        day = DayName.objects.get(pk=day_name_id)
+
+        recipe_id = request.POST.get('recipe_id')
+        recipe = Recipe.objects.get(pk=recipe_id)
+
+        RecipePlan.objects.create(meal_name=meal_name, order=order, day_name_id=day, plan_id=plan,
+                                  recipe_id=recipe)
+        
+        days = DayName.objects.all()
+        recipes = Recipe.objects.all()
+        context = {
+            'plan': plan.name,
+            'days': days,
+            'recipes': recipes,
+        }
+        return render(request, 'app-schedules-meal-recipe.html', context=context)
+
 class RecipesView(View):
     def get(self, request):
         return render(request, 'recipes.html')
@@ -133,3 +176,4 @@ class RecipeNewView(View):
         recipe_new = Recipe.objects.order_by('-created')[0]
         recipe_new_ingredients = recipe_new.ingredients.split(",")
         return render(request, 'app-recipe-details.html', context={"recipe_new": recipe_new, "recipe_new_ingredients": recipe_new_ingredients})
+
