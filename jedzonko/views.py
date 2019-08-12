@@ -15,7 +15,7 @@ class IndexView(View):
 
 class RecipeListView(View):
     def get(self, request):
-        recipes = Recipe.objects.all()
+        recipes = Recipe.objects.all().order_by("id")
         context = {
             "recipes": recipes
         }
@@ -46,7 +46,7 @@ class RecipeAddView(View):
         if name and ingredients and description and preparation_time and instructions:
             Recipe.objects.create(name=name, ingredients=ingredients,
                                   preparation_time=preparation_time, instructions=instructions, description=description)
-            return render(request, "app-add-recipe.html")
+            return redirect('/recipe/list')
         else:
             message = "Wypełnij poprawnie wszystkie pola"
             return render(request, "app-add-recipe.html", context={"message": message})
@@ -105,12 +105,19 @@ class PlanDetailsView(View):
             else:
                 days[day_name].append(recipe_plan)
 
+        if recipe_plans and days:
             context = {
                 'plan': plan,
                 'recipe_plans': recipe_plans,
                 'days': days,
             }
-        return render(request, 'app-details-schedules.html', context=context)
+            return render(request, 'app-details-schedules.html', context=context)
+        else:
+            context = {
+                'plan': plan,
+                'message': 'Brak przepisów'
+            }
+            return render(request, 'app-details-schedules.html', context=context)
 
 
 class RecipeDetailsView(View):
@@ -124,26 +131,41 @@ class RecipeDetailsView(View):
         return render(request, 'app-recipe-details.html', context=context)
 
 
-
 class PlanEditView(View):
     def get(self, request):
-        if not request.session.get('plan_id'):
-            raise Http404
-            # return render(request, 'app-schedules-meal-recipe.html')
-        plan_id = request.session.get('plan_id')
+        # if not request.session.get('plan_id'):
+        #     raise Http404
+        # return render(request, 'app-schedules-meal-recipe.html')
         days = DayName.objects.all()
-        plan = Plan.objects.get(pk=plan_id)
+        all_plans = Plan.objects.all()
         recipes = Recipe.objects.all()
-        context = {
-            'plan': plan.name,
-            'days': days,
-            'recipes': recipes,
-        }
+
+        plan_id = request.session.get('plan_id')
+        if plan_id:
+            plan = Plan.objects.get(pk=plan_id)
+            context = {
+                'plan': plan,
+                'all_plans': all_plans,
+                'days': days,
+                'recipes': recipes,
+            }
+        else:
+            context = {
+                'all_plans': all_plans,
+                'days': days,
+                'recipes': recipes,
+            }
         return render(request, 'app-schedules-meal-recipe.html', context=context)
 
     def post(self, request):
         plan_id = request.session.get('plan_id')
-        plan = Plan.objects.get(pk=plan_id)
+        if plan_id:
+            plan = Plan.objects.get(pk=plan_id)
+        else:
+            plan_id = request.POST.get('plan')
+            plan = Plan.objects.get(pk=plan_id)
+
+        all_plans = Plan.objects.all()
 
         meal_name = request.POST.get('meal_name')
         order = request.POST.get('order')
@@ -156,15 +178,17 @@ class PlanEditView(View):
 
         RecipePlan.objects.create(meal_name=meal_name, order=order, day_name_id=day, plan_id=plan,
                                   recipe_id=recipe)
-        
+
         days = DayName.objects.all()
         recipes = Recipe.objects.all()
         context = {
-            'plan': plan.name,
+            'plan': plan,
+            'all_plans': all_plans,
             'days': days,
             'recipes': recipes,
         }
         return render(request, 'app-schedules-meal-recipe.html', context=context)
+
 
 class RecipesView(View):
     def get(self, request):
@@ -187,7 +211,9 @@ class RecipeModifyView(View):
         preparation_time = recipe.preparation_time
         instructions = recipe.instructions
         return render(request, "app-add-recipe.html", context={'name': name, 'ingredients': ingredients,
-                                  'preparation_time': preparation_time, 'instructions': instructions, 'description': description})
+                                                               'preparation_time': preparation_time,
+                                                               'instructions': instructions,
+                                                               'description': description})
 
     def post(self, request, recipe_id):
         recipe = Recipe.objects.get(pk=recipe_id)
@@ -196,21 +222,69 @@ class RecipeModifyView(View):
         recipe.preparation_time = request.POST.get("preparation_time")
         recipe.instructions = request.POST.get("instructions")
         recipe.description = request.POST.get("description")
+
         if recipe.name and recipe.ingredients and recipe.description and recipe.preparation_time and recipe.instructions:
             recipe.save()
             message = "Przepis zaktualizowany"
             return render(request, "app-add-recipe.html", context={"message": message})
         else:
-            recipe.name = recipe.name
-            recipe.ingredients = recipe.ingredients
-            recipe.description = recipe.description
-            recipe.preparation_time = recipe.preparation_time
-            recipe.instructions = recipe.instructions
+            # recipe.name = recipe.name
+            # recipe.ingredients = recipe.ingredients
+            # recipe.description = recipe.description
+            # recipe.preparation_time = recipe.preparation_time
+            # recipe.instructions = recipe.instructions
             message = "Wypełnij poprawnie wszystkie pola"
-            return render(request, "app-add-recipe.html", context={'name': recipe.name, 'ingredients': recipe.ingredients,
-                                                                   'preparation_time': recipe.preparation_time,
-                                                                   'instructions': recipe.instructions,
-                                                                   'description': recipe.description,
-                                                                   'message': message})
+            return render(request, "app-add-recipe.html",
+                          context={'name': recipe.name, 'ingredients': recipe.ingredients,
+                                   'preparation_time': recipe.preparation_time,
+                                   'instructions': recipe.instructions,
+                                   'description': recipe.description,
+                                   'message': message})
 
-            return render(request, "app-add-recipe.html", context)
+
+class PlanModifyView(View):
+    def get(self, request, plan_id):
+        plan = Plan.objects.get(pk=plan_id)
+        context = {
+            'plan': plan
+        }
+        return render(request, 'app-edit-schedules.html', context=context)
+
+    def post(self, request, plan_id):
+        plan = Plan.objects.get(pk=plan_id)
+        plan.name = request.POST.get('name')
+        plan.description = request.POST.get('description')
+        if plan.name and plan.description:
+            plan.save()
+            return redirect('/plan/list')
+        else:
+            message = 'Błędne dane!'
+            return render(request, 'app-edit-schedules.html', context={'message': message})
+
+
+class PlanDeleteView(View):
+    def get(self, request, plan_id):
+        plan = Plan.objects.get(pk=plan_id)
+        plan.delete()
+        return redirect('/plan/list')
+
+
+class RecipeDeleteView(View):
+    def get(self, request, recipe_id):
+        recipe = Recipe.objects.get(pk=recipe_id)
+        recipe.delete()
+        return redirect('/recipe/list')
+
+
+class RecipePlanDeleteView(View):
+    def get(self, request, recipe_plan_id):
+        recipe_plan = RecipePlan.objects.get(pk=recipe_plan_id)
+        recipe_plan.delete()
+        return redirect('/plan/list')
+
+
+class PlanNewDetailsView(View):
+    def get(self, request):
+        if request.session.get('plan_id'):
+            del request.session['plan_id']
+        return redirect('/plan/list')

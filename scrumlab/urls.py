@@ -13,11 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path
 from jedzonko.views import IndexView, AboutView, ContactView, RecipeListView, RecipeAddView, MainView, AppView, \
     PlanAddView, PlanListView, PlanDetailsView, RecipeDetailsView, RecipesView, RecipeNewView, PlanEditView, \
-    RecipeModifyView
+    RecipeModifyView, PlanModifyView, PlanDeleteView, RecipeDeleteView, RecipePlanDeleteView, PlanNewDetailsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,18 +30,23 @@ urlpatterns = [
     path('recipe/add/', RecipeAddView.as_view(), name="recipe_add"),
     path('recipe/list/', RecipeListView.as_view()),
     path('recipe/<int:recipe_id>/', RecipeDetailsView.as_view()),
+    path('new_recipe/', RecipeNewView.as_view()),
+    path('recipe/modify/<int:recipe_id>', RecipeModifyView.as_view()),
+    path('recipe/delete/<int:recipe_id>', RecipeDeleteView.as_view()),
 
     path('plan/add/', PlanAddView.as_view()),
     path('plan/list/', PlanListView.as_view()),
     path('plan/<int:plan_id>/', PlanDetailsView.as_view()),
+    path('plan/modify/<int:plan_id>/', PlanModifyView.as_view()),
+    path('plan/delete/<int:plan_id>/', PlanDeleteView.as_view()),
+    path('plan/add/details/', PlanEditView.as_view()),
+    path('new_plan_details/', PlanNewDetailsView.as_view()),
 
-    path('plan/add/details', PlanEditView.as_view()),
+    path('recipe_plan/delete/<int:recipe_plan_id>/', RecipePlanDeleteView.as_view()),
 
     path('recipes/', RecipesView.as_view()),
 
     path('about/', AboutView.as_view()),
     path('contact/', ContactView.as_view()),
-    path('new_recipe/', RecipeNewView.as_view()),
-    path('recipe/modify/<int:recipe_id>', RecipeModifyView.as_view()),
-]
 
+]
