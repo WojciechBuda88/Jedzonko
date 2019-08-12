@@ -1,0 +1,18 @@
+{% extends "__base__.html" %}
+{% block title %}O aplikacji{% endblock %}
+{% block content %}
+
+
+    <div class="dashboard-content border-dashed p-3 m-4 view-height">
+
+        <div class="mt-4 ml-4 mr-4">
+            <div class="row border-bottom border-3">
+                <div class="col"><h3 class="color-header text-uppercase">O aplikacji</h3></div></div></div>
+                {% if about %}
+                <div class="col-5 p-4"> {{ about.description }} </div>
+                {% elif message %}
+                <div class="col-5 p-4"> {{ message }} </div>
+                {% endif %}
+    </div>
+
+{% endblock content %}

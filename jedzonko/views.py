@@ -1,10 +1,8 @@
 from datetime import datetime
 import random
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.http import Http404
-from jedzonko.models import Recipe, Plan, DayName, RecipePlan
+from jedzonko.models import Recipe, Plan, DayName, RecipePlan, Page
 
 
 class IndexView(View):
@@ -54,12 +52,22 @@ class RecipeAddView(View):
 
 class AboutView(View):
     def get(self, request):
-        return render(request, "about.html")
-
+        try:
+            about = Page.objects.get(slug='about')
+            return render(request, "about.html", context={"about": about})
+        except:
+            message = "Strona w przygotowaniu"
+            return render(request, "about.html", context={"message": message})
 
 class ContactView(View):
     def get(self, request):
-        return render(request, "contact.html")
+        try:
+            contact = Page.objects.get(slug='contact')
+            contact_detail = contact.description.split(",")
+            return render(request, "contact.html", context={"contact_detail": contact_detail})
+        except:
+            message = "Strona w przygotowaniu"
+            return render(request, "contact.html", context={"message": message})
 
 
 class AppView(View):
@@ -228,11 +236,6 @@ class RecipeModifyView(View):
             message = "Przepis zaktualizowany"
             return render(request, "app-add-recipe.html", context={"message": message})
         else:
-            # recipe.name = recipe.name
-            # recipe.ingredients = recipe.ingredients
-            # recipe.description = recipe.description
-            # recipe.preparation_time = recipe.preparation_time
-            # recipe.instructions = recipe.instructions
             message = "Wypełnij poprawnie wszystkie pola"
             return render(request, "app-add-recipe.html",
                           context={'name': recipe.name, 'ingredients': recipe.ingredients,
