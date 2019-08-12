@@ -1,0 +1,23 @@
+{% extends "__base__.html" %}
+{% block title %}Kontakt{% endblock %}
+{% block content %}
+
+
+    <div class="dashboard-content border-dashed p-3 m-4 view-height">
+
+        <div class="mt-4 ml-4 mr-4">
+            <div class="row border-bottom border-3">
+                <div class="col"><h3 class="color-header text-uppercase">Kontakt</h3></div></div>
+
+                {% if contact_detail %}
+                <div class="p-4">
+                    {% for detail in contact_detail %}
+                        <p>{{ detail }}</p>
+                    {% endfor %}
+                {% elif message %}
+                <div class="col-5 p-4"> {{ message }} </div>
+                {% endif %}
+                </div>
+    </div></div>
+
+{% endblock content %}
