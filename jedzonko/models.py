@@ -9,7 +9,7 @@ class Recipe(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     preparation_time = models.IntegerField()
-    votes = models.IntegerField(null=True)
+    votes = models.IntegerField(default=0)
     instructions = models.TextField(null=True)
 
     def __str__(self):

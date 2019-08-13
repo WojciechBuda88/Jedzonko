@@ -15,7 +15,7 @@ class IndexView(View):
 
 class RecipeListView(View):
     def get(self, request):
-        recipes = Recipe.objects.all().order_by("id")
+        recipes = Recipe.objects.all().order_by("-votes", "name")
         paginator = Paginator(recipes, 2)
         page = request.GET.get('page')
         recipes = paginator.get_page(page)
@@ -170,19 +170,11 @@ class RecipeDetailsView(View):
         opinion = request.POST['like']
 
         if opinion == 'Lubie to!':
-            if recipe.votes:
-                recipe.votes += 1
-                recipe.save()
-            else:
-                recipe.votes = 1
-                recipe.save()
+            recipe.votes += 1
+            recipe.save()
         elif opinion == 'Nie lubie!':
-            if recipe.votes:
-                recipe.votes -= 1
-                recipe.save()
-            else:
-                recipe.votes = -1
-                recipe.save()
+            recipe.votes -= 1
+            recipe.save()
         return redirect(f'/recipe/{recipe.id}')
 
 
@@ -234,7 +226,7 @@ class PlanEditView(View):
 
 class RecipesView(View):
     def get(self, request):
-        recipes = Recipe.objects.all()
+        recipes = Recipe.objects.all().order_by('-votes', 'name')
         context = {
             'recipes': recipes
         }
