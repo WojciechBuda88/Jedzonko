@@ -41,6 +41,38 @@
             {% endfor %}
             </tbody>
         </table>
+
+        {% if plans.paginator.num_pages > 1 %}
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if plans.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ plans.previous_page_number }}">poprzednia</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">poprzednia</a>
+                </li>
+                {% endif %}
+
+                {% for page_number in page_numbers %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_number }}">{{page_number}}</a>
+                </li>
+                {% endfor %}
+
+                {% if plans.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ plans.next_page_number }}">następna</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">następna</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
     </div>
 </div>
 {% endblock content %}

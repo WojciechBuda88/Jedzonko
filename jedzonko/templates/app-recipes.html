@@ -38,5 +38,38 @@
         {% endfor %}
         </tbody>
     </table>
+
+    {% if recipes.paginator.num_pages > 1 %}
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if recipes.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ recipes.previous_page_number }}">poprzednia</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">poprzednia</a>
+            </li>
+            {% endif %}
+
+            {% for page_number in page_numbers %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_number }}">{{page_number}}</a>
+            </li>
+            {% endfor %}
+
+            {% if recipes.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ recipes.next_page_number }}">następna</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">następna</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
 </div>
 {% endblock content %}
