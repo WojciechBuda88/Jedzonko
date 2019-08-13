@@ -2,6 +2,7 @@ from datetime import datetime
 import random
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator
 from django.views import View
 from django.http import Http404
 from jedzonko.models import Recipe, Plan, DayName, RecipePlan
@@ -16,8 +17,13 @@ class IndexView(View):
 class RecipeListView(View):
     def get(self, request):
         recipes = Recipe.objects.all().order_by("id")
+        paginator = Paginator(recipes, 2)
+        page = request.GET.get('page')
+        recipes = paginator.get_page(page)
+        page_numbers = range(1, recipes.paginator.num_pages + 1)
         context = {
-            "recipes": recipes
+            "recipes": recipes,
+            "page_numbers": page_numbers
         }
         return render(request, "app-recipes.html", context=context)
 
@@ -87,8 +93,13 @@ class PlanAddView(View):
 class PlanListView(View):
     def get(self, request):
         plans = Plan.objects.all().order_by('name')
+        paginator = Paginator(plans, 2)
+        page = request.GET.get('page')
+        plans = paginator.get_page(page)
+        page_numbers = range(1, plans.paginator.num_pages + 1)
         context = {
-            'plans': plans
+            'plans': plans,
+            'page_numbers': page_numbers
         }
         return render(request, 'app-schedules.html', context=context)
 
