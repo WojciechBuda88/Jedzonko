@@ -157,10 +157,28 @@ class RecipeDetailsView(View):
     def get(self, request, recipe_id):
         recipe = Recipe.objects.get(pk=recipe_id)
         ingredients = recipe.ingredients.split(',')
+        # likes = recipe.votes
         context = {
             'recipe': recipe,
-            'ingredients': ingredients
+            'ingredients': ingredients,
         }
+        return render(request, 'app-recipe-details.html', context=context)
+
+    def post(self, request, recipe_id):
+        recipe = Recipe.objects.get(pk=recipe_id)
+        ingredients = recipe.ingredients.split(',')
+        opinion = request.POST['like']
+        #print(opinion)
+        context = {
+            'recipe': recipe,
+            'ingredients': ingredients,
+        }
+        if opinion == 'Lubie to!':
+            recipe.votes += 1
+            recipe.save()
+        elif opinion == 'Nie lubie!':
+            recipe.votes -= 1
+            recipe.save()
         return render(request, 'app-recipe-details.html', context=context)
 
 
