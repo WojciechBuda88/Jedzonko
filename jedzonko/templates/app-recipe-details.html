@@ -2,6 +2,17 @@
 {% block title %}{% endblock %}
 {% block content %}
 <div class="dashboard-content border-dashed p-3 m-4 view-height">
+
+    {% if messages %}
+    <div class="alert alert-success" role="alert">
+        {% for message in messages %}
+        <span
+                {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+            </span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="mt-4 ml-4 mr-4">
         <div class="row border-bottom border-3">
             <div class="col"><h3 class="color-header text-uppercase">Szczegóły
@@ -11,6 +22,8 @@
                     class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4">Powrót</a>
             </div>
         </div>
+
+
         <table class="table borderless">
             <tbody>
             <tr class="d-flex">
@@ -62,8 +75,10 @@
     <div align="right">
         <form name="like_or_hate" method="post">
             {% csrf_token %}
-            <input class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4" type="submit" name="like" value="Lubie to!">
-            <input class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4" type="submit" name="like" value="Nie lubie!">
+            <input class="btn btn-success btn-lg rounded-0 pt-0 pb-0 pr-4 pl-4" type="submit" name="like"
+                   value="Lubie to!">
+            <input class="btn btn-danger btn-lg rounded-0 pt-0 pb-0 pr-4 pl-4" type="submit" name="like"
+                   value="Nie lubie!">
         </form>
     </div>
 

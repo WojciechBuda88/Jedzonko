@@ -8,6 +8,15 @@
 
 <form action="" method="POST">
     <div class="dashboard-content border-dashed p-3 m-4 view-height">
+        {% if messages %}
+        <div class="alert alert-danger" role="alert">
+            {% for message in messages %}
+            <span
+                    {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+            </span>
+            {% endfor %}
+        </div>
+        {% endif %}
 
         <div class="mt-4 ml-4 mr-4">
             <div class="row border-bottom border-3">
@@ -27,7 +36,7 @@
                 <tr class="d-flex">
                     <th scope="row" class="col-2">Nazwa Przepisu</th>
                     <td class="col-7">
-                        <input class="w-100 p-1" value="{{ name }}" name="name" required>
+                        <input class="w-100 p-1" value="{{ name }}" name="name">
                     </td>
                 </tr>
                 <tr class="d-flex">

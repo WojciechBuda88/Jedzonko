@@ -2,6 +2,7 @@ from datetime import datetime
 import random
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
+from django.contrib import messages
 from django.views import View
 from jedzonko.models import Recipe, Plan, DayName, RecipePlan, Page
 
@@ -50,10 +51,11 @@ class RecipeAddView(View):
         if name and ingredients and description and preparation_time and instructions:
             Recipe.objects.create(name=name, ingredients=ingredients,
                                   preparation_time=preparation_time, instructions=instructions, description=description)
+            messages.add_message(request, messages.INFO, "Dodano nowy przepis")
             return redirect('/recipe/list')
         else:
-            message = "Wypełnij poprawnie wszystkie pola"
-            return render(request, "app-add-recipe.html", context={"message": message})
+            messages.add_message(request, messages.INFO, "Wypełnij poprawnie wszystkie pola")
+            return redirect('/recipe/add')
 
 
 class AboutView(View):
@@ -64,6 +66,7 @@ class AboutView(View):
         except:
             message = "Strona w przygotowaniu"
             return render(request, "about.html", context={"message": message})
+
 
 class ContactView(View):
     def get(self, request):
@@ -97,7 +100,6 @@ class AppView(View):
                    'days': days,
                    }
         return render(request, 'dashboard.html', context=context)
-
 
 
 class PlanAddView(View):
@@ -157,7 +159,6 @@ class RecipeDetailsView(View):
     def get(self, request, recipe_id):
         recipe = Recipe.objects.get(pk=recipe_id)
         ingredients = recipe.ingredients.split(',')
-        # likes = recipe.votes
         context = {
             'recipe': recipe,
             'ingredients': ingredients,
@@ -166,27 +167,27 @@ class RecipeDetailsView(View):
 
     def post(self, request, recipe_id):
         recipe = Recipe.objects.get(pk=recipe_id)
-        ingredients = recipe.ingredients.split(',')
         opinion = request.POST['like']
-        #print(opinion)
-        context = {
-            'recipe': recipe,
-            'ingredients': ingredients,
-        }
+
         if opinion == 'Lubie to!':
-            recipe.votes += 1
-            recipe.save()
+            if recipe.votes:
+                recipe.votes += 1
+                recipe.save()
+            else:
+                recipe.votes = 1
+                recipe.save()
         elif opinion == 'Nie lubie!':
-            recipe.votes -= 1
-            recipe.save()
-        return render(request, 'app-recipe-details.html', context=context)
+            if recipe.votes:
+                recipe.votes -= 1
+                recipe.save()
+            else:
+                recipe.votes = -1
+                recipe.save()
+        return redirect(f'/recipe/{recipe.id}')
 
 
 class PlanEditView(View):
     def get(self, request):
-        # if not request.session.get('plan_id'):
-        #     raise Http404
-        # return render(request, 'app-schedules-meal-recipe.html')
         days = DayName.objects.all()
         all_plans = Plan.objects.all()
         recipes = Recipe.objects.all()
@@ -216,8 +217,6 @@ class PlanEditView(View):
             plan_id = request.POST.get('plan')
             plan = Plan.objects.get(pk=plan_id)
 
-        all_plans = Plan.objects.all()
-
         meal_name = request.POST.get('meal_name')
         order = request.POST.get('order')
 
@@ -230,20 +229,16 @@ class PlanEditView(View):
         RecipePlan.objects.create(meal_name=meal_name, order=order, day_name_id=day, plan_id=plan,
                                   recipe_id=recipe)
 
-        days = DayName.objects.all()
-        recipes = Recipe.objects.all()
-        context = {
-            'plan': plan,
-            'all_plans': all_plans,
-            'days': days,
-            'recipes': recipes,
-        }
-        return render(request, 'app-schedules-meal-recipe.html', context=context)
+        return redirect(f'/plan/add/details')
 
 
 class RecipesView(View):
     def get(self, request):
-        return render(request, 'recipes.html')
+        recipes = Recipe.objects.all()
+        context = {
+            'recipes': recipes
+        }
+        return render(request, "recipes.html", context=context)
 
 
 class RecipeNewView(View):
@@ -276,16 +271,12 @@ class RecipeModifyView(View):
 
         if recipe.name and recipe.ingredients and recipe.description and recipe.preparation_time and recipe.instructions:
             recipe.save()
-            message = "Przepis zaktualizowany"
-            return render(request, "app-add-recipe.html", context={"message": message})
+            messages.add_message(request, messages.INFO, "Przepis zaktualizowany")
+            return redirect(f'/recipe/{recipe.id}')
+
         else:
-            message = "Wypełnij poprawnie wszystkie pola"
-            return render(request, "app-add-recipe.html",
-                          context={'name': recipe.name, 'ingredients': recipe.ingredients,
-                                   'preparation_time': recipe.preparation_time,
-                                   'instructions': recipe.instructions,
-                                   'description': recipe.description,
-                                   'message': message})
+            messages.add_message(request, messages.INFO, "Wypełnij poprawnie wszystkie pola")
+            return redirect(f'/recipe/modify/{recipe.id}')
 
 
 class PlanModifyView(View):
@@ -302,16 +293,18 @@ class PlanModifyView(View):
         plan.description = request.POST.get('description')
         if plan.name and plan.description:
             plan.save()
-            return redirect('/plan/list')
+            messages.add_message(request, messages.INFO, "Plan zaktualizowany")
+            return redirect(f'/plan/{plan.id}')
         else:
-            message = 'Błędne dane!'
-            return render(request, 'app-edit-schedules.html', context={'message': message})
+            messages.add_message(request, messages.INFO, "Wypełnij poprawnie wszystkie pola")
+            return redirect(f'/plan/modify/{plan.id}')
 
 
 class PlanDeleteView(View):
     def get(self, request, plan_id):
         plan = Plan.objects.get(pk=plan_id)
         plan.delete()
+        messages.add_message(request, messages.INFO, "Plan usunięty")
         return redirect('/plan/list')
 
 
@@ -319,14 +312,17 @@ class RecipeDeleteView(View):
     def get(self, request, recipe_id):
         recipe = Recipe.objects.get(pk=recipe_id)
         recipe.delete()
+        messages.add_message(request, messages.INFO, "Przepis usunięty")
         return redirect('/recipe/list')
 
 
 class RecipePlanDeleteView(View):
     def get(self, request, recipe_plan_id):
         recipe_plan = RecipePlan.objects.get(pk=recipe_plan_id)
+        plan = Plan.objects.get(recipe_plans=recipe_plan_id)
         recipe_plan.delete()
-        return redirect('/plan/list')
+        messages.add_message(request, messages.INFO, "Posiłek usunięty")
+        return redirect(f'/plan/{plan.id}')
 
 
 class PlanNewDetailsView(View):

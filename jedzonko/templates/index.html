@@ -24,19 +24,19 @@
         </a>
         <ul class="nav nounderline text-uppercase">
             <li class="nav-item ml-4">
-                <a class="nav-link color-header" href="login.html">logowanie</a>
+                <a class="nav-link color-header" href="/main/">logowanie</a>
             </li>
             <li class="nav-item ml-4">
                 <a class="nav-link color-header" href="registration.html">rejestracja</a>
             </li>
             <li class="nav-item ml-4">
-                <a class="nav-link" href="/about">o aplikacji</a>
+                <a class="nav-link" href="/about/">o aplikacji</a>
             </li>
             <li class="nav-item ml-4">
-                <a class="nav-link disabled" href="/recipe/list">Przepisy</a>
+                <a class="nav-link disabled" href="/recipes/">Przepisy</a>
             </li>
             <li class="nav-item ml-4">
-                <a class="nav-link disabled" href="/contact">Kontakt</a>
+                <a class="nav-link disabled" href="/contact/">Kontakt</a>
             </li>
         </ul>
     </nav>
@@ -47,7 +47,7 @@
         <div class="carousel-inner container">
             <div class="carousel-item active">
                 <div class="container w-75 d-flex">
-                    <div class="carousel-caption d-block">
+                    <div class="carousel-caption d-block w-100">
                         {% if recipes.0 %}
                         <h1>{{recipes.0}}</h1>
                         <h3> {{recipes.0.description}}</h3>
@@ -59,7 +59,7 @@
             </div>
             <div class="carousel-item">
                 <div class="container w-75 d-flex">
-                    <div class="carousel-caption d-block">
+                    <div class="carousel-caption d-block w-100">
                         {% if recipes.1 %}
                         <h1>{{recipes.1}}</h1>
                         <h3> {{recipes.1.description}}</h3>
@@ -71,7 +71,7 @@
             </div>
             <div class="carousel-item">
                 <div class="container w-75 d-flex">
-                    <div class="carousel-caption d-block">
+                    <div class="carousel-caption d-block w-100">
                         {% if recipes.2 %}
                         <h1>{{recipes.2}}</h1>
                         <h3> {{recipes.2.description}}</h3>
