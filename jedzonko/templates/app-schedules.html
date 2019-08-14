@@ -2,7 +2,15 @@
 {% block title %}{% endblock %}
 {% block content %}
 <div class="dashboard-content border-dashed p-3 m-4 view-height">
-
+    {% if messages %}
+    <div class="alert alert-success" role="alert">
+        {% for message in messages %}
+        <span
+                {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+            </span>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="row border-bottom border-3 p-1 m-1">
         <div class="col noPadding">
             <h3 class="color-header text-uppercase">LISTA PLANÓW</h3>
