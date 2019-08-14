@@ -28,7 +28,7 @@
                 <a class="nav-link color-header" href="/main/">logowanie</a>
             </li>
             <li class="nav-item ml-4">
-                <a class="nav-link color-header" href="registration.html">rejestracja</a>
+                <a class="nav-link color-header" href="#">rejestracja</a>
             </li>
             <li class="nav-item ml-4">
                 <a class="nav-link" href="/about/">o aplikacji</a>
@@ -56,7 +56,22 @@
     <a href="/recipe/add" class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj nowy przepis</a>
     &nbsp;
     <a href="/new_recipe" class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4">Zobacz ostatnio dodany przepis</a>
+
+
+    <!--<form method="GET" action="" id="searchform">-->
+    <!--    <input class="searchfield" id="searchbox" name="q" type="text" value="{{ request.GET.q }}">-->
+    <!--    <button type="submit">OK</button>-->
+
+    <!--</form>-->
 </p>
+
+<form class="form-inline my-2 my-lg-0" method="GET" action="" id="searchform">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="searchbox" name="q"
+           type="text" value="{{ request.GET.q }}">
+    <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Wyszukaj</button>
+    {% csrf_token %}
+</form>
+<br>
 
 <section class="mr-4 ml-4">
     <table class="table">

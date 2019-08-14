@@ -226,10 +226,19 @@ class PlanEditView(View):
 
 class RecipesView(View):
     def get(self, request):
-        recipes = Recipe.objects.all().order_by('-votes', 'name')
-        context = {
-            'recipes': recipes
-        }
+
+        recipe = request.GET.get('q')
+        if recipe:
+            recipe = Recipe.objects.filter(name__icontains=recipe)
+            context = {
+                'recipes': recipe
+            }
+        else:
+            recipes = Recipe.objects.all().order_by('-created')
+            context = {
+                'recipes': recipes
+            }
+
         return render(request, "recipes.html", context=context)
 
 
