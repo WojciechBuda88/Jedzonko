@@ -1,1 +1,1 @@
-
+Jedzonko to internetowa książka kucharska z możliwością zarządzania pojedynczymi przepisami jak i złożonymi planami żywieniowymi metodologią CRUD. Apliklacja została wzbogacona również o kilka funkcji społecznościowych, jak możliwość oceniania przepisów przez użytkowników, proponując najpopularniejsze rozwiązania jako pierwsze na liście wyszukiwania.
